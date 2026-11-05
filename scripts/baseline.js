@@ -39,7 +39,7 @@ const INTEG_RUNNER = process.env.INTEG_RUNNER ?? path.join(CLI_REPO, 'integ-runn
 process.env.TOOLKIT_LIB ??= path.join(CLI_REPO, 'toolkit-lib');
 
 const { resolvedSnapshot, writeResolvedSnapshots } = require(path.join(INTEG_RUNNER, 'lib/runner/resolved-snapshot'));
-const { runResourceChecks, writeResourceCheckReports, formatResourceCheckSummary } = require(path.join(INTEG_RUNNER, 'lib/runner/resource-checks'));
+const { runResourceChecks, normalizeResourceCheckReport, writeResourceCheckReports, formatResourceCheckSummary } = require(path.join(INTEG_RUNNER, 'lib/runner/resource-checks'));
 
 function usage() {
   console.error('usage: node scripts/baseline.js --snapshots <dir> --out <dir> [options] (see the comment at the top of this file)');
@@ -148,7 +148,7 @@ async function baseline(test, region) {
     const stacks = JSON.parse(fs.readFileSync(evaluated, 'utf-8')).stacks;
     await writeResolvedSnapshots(snapshot, stacks.map(resolvedSnapshot));
     const { reports, errors } = runResourceChecks(stacks, { checkerDirectory: CHECKER, region, env: { AWS_DEFAULT_REGION: region } });
-    await writeResourceCheckReports(snapshot, reports);
+    await writeResourceCheckReports(snapshot, reports.map((r) => normalizeResourceCheckReport(r, stacks.find((st) => st.stackName === r.stackName))));
     status.checks = Object.fromEntries(reports.map((r) => [r.stackName, r.summary]));
     if (errors.length > 0) status.checkErrors = errors;
     status.result = 'baselined';
