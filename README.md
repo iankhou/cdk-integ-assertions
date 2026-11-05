@@ -60,6 +60,17 @@ npm run check -- --resolved my-test.evaluate.json --stack MyStack --out my-test.
 
 `--types T1,T2` limits the run to some resource types.
 
+### From integ-runner
+
+integ-runner from the same branch can run the checker on each test stack after deploying it:
+
+```sh
+integ-runner --resource-checks path/to/cdk-integ-assertions ...
+```
+
+It prints a summary per stack (e.g. `my-stack: 24 pass, 3 missing`), and writes the results to
+`<stackName>.checks.json` in the snapshot, next to `<stackName>.resolved.json`. The results never fail the test.
+
 ### Against an emulator
 
 Point the AWS environment at the emulator (`AWS_ENDPOINT_URL`, its credentials, and `NODE_EXTRA_CA_CERTS` if it
