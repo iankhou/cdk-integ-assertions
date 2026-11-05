@@ -11,7 +11,12 @@ export default handler({
   client: IAMClient,
   exists: getPolicy,
   properties: {
-    Description: check({ call: getPolicy, actual: (res) => res.Policy?.Description }),
+    Description: check({
+      call: getPolicy,
+      expected: (v: string) => (v === '' ? undefined : v),
+      actual: (res) => res.Policy?.Description,
+      note: 'IAM does not store an empty description',
+    }),
     Path: check({ call: getPolicy, actual: (res) => res.Policy?.Path }),
     ManagedPolicyName: check({ call: getPolicy, actual: (res) => res.Policy?.PolicyName }),
     // GetPolicyVersion needs the DefaultVersionId (only known from GetPolicy), so the default version's

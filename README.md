@@ -28,10 +28,10 @@ Only `Get*`, `Describe*`, `List*`, `Head*` and `BatchGet*` calls are allowed, an
 
 ```sh
 npm install
-scripts/build-toolkit-lib.sh   # builds toolkit-lib with the evaluate action into .toolkit-lib/
+scripts/build-aws-cdk-cli.sh   # builds toolkit-lib (evaluate) and integ-runner into .toolkit-lib/
 ```
 
-The `evaluate` action isn't released yet. `build-toolkit-lib.sh` builds it from the
+The `evaluate` action isn't released yet. `build-aws-cdk-cli.sh` builds it, and the integ-runner that goes with it, from the
 [`template-evaluation`](https://github.com/iankhou/aws-cdk-cli/tree/template-evaluation) branch of
 iankhou/aws-cdk-cli (aws/aws-cdk-cli#2075, #2066 and #2087). To use another build, set `TOOLKIT_LIB` to its
 `packages/@aws-cdk/toolkit-lib` directory.
@@ -59,6 +59,20 @@ npm run check -- --resolved my-test.evaluate.json --stack MyStack --out my-test.
 | `not deployed` | the resource isn't in the deployed stack |
 
 `--types T1,T2` limits the run to some resource types.
+
+### Baselining many snapshots
+
+`scripts/baseline.js` deploys integ test snapshots as they are committed (no synthesis), and for each one writes
+`<stackName>.resolved.json` and `<stackName>.checks.json` into the snapshot directory, then destroys it:
+
+```sh
+node scripts/baseline.js --snapshots path/to/aws-cdk/packages/@aws-cdk-testing/framework-integ/test --out baseline-run \
+  --regions us-east-1,us-west-2 --per-region 2 --cleanup-retained
+```
+
+It's resumable (tests with a status in `--out` are skipped; `--retry-failed` reruns failures), and writes
+`summary.json` with the results, the tests that didn't deploy and why, failed destroys, and resources left behind.
+See the comment at the top of the script for all options.
 
 ### From integ-runner
 

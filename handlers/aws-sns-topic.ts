@@ -7,8 +7,8 @@ const topic = (ctx: { physicalId: string }) => ({ TopicArn: ctx.physicalId });
 const attr = (name: string, extra: { expected?: (v: any) => unknown; compare?: 'json' } = {}) =>
   check<GetTopicAttributesCommandOutput>({ call: (ctx) => new GetTopicAttributesCommand(topic(ctx)), actual: (r) => r.Attributes?.[name], ...extra });
 
-// DeliveryStatusLogging protocols and their attribute name prefixes (http and https share HTTP*)
-const prefixes: Record<string, string> = { http: 'HTTP', https: 'HTTP', sqs: 'SQS', lambda: 'Lambda', firehose: 'Firehose', application: 'Application' };
+// DeliveryStatusLogging protocols and their attribute name prefixes (http, https and http/s share HTTP*)
+const prefixes: Record<string, string> = { 'http': 'HTTP', 'https': 'HTTP', 'http/s': 'HTTP', 'sqs': 'SQS', 'lambda': 'Lambda', 'firehose': 'Firehose', 'application': 'Application' };
 const byProtocol = (a: any, b: any) => String(a.Protocol).localeCompare(String(b.Protocol));
 
 export default handler({
