@@ -74,16 +74,11 @@ It prints a summary per stack (e.g. `my-stack: 24 pass, 3 missing`), and writes 
 ### Against an emulator
 
 Point the AWS environment at the emulator (`AWS_ENDPOINT_URL`, its credentials, and `NODE_EXTRA_CA_CERTS` if it
-serves HTTPS with its own CA), and pass `--emulator` to `evaluate.js`. With it, Cloud Control reads the emulator
-hasn't implemented leave those values unresolved, instead of failing the stack.
+serves HTTPS with its own CA). Nothing is adjusted for the emulator: whatever it doesn't support fails or is reported
+(a deployment that fails, a value evaluate can't resolve, a `missing` resource, a `fail`), and those are the gaps to
+compare against a run on real AWS.
 
 With an endpoint override, SQS calls go to the override, not to the host in the queue URL.
-
-Emulators may not support everything `cdk deploy` does. With the AWS Emulator (1.0.147) at the time of writing:
-
-- deploy with `--method=direct`: executing a change set for a new stack fails;
-- CloudFormation can't read templates from S3, so remove `stackTemplateAssetObjectUrl` from the stacks in the
-  snapshot's `manifest.json` to have the CLI send templates under 50 KB inline.
 
 ## Writing a handler
 

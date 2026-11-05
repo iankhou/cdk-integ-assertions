@@ -2,23 +2,19 @@
 /**
  * Resolve deployed stacks' templates with the toolkit-lib evaluate action.
  *
- * Usage: node scripts/evaluate.js <cloud-assembly-dir> <out.json> [stackName] [--emulator]
+ * Usage: node scripts/evaluate.js <cloud-assembly-dir> <out.json> [stackName]
  *   Credentials, region and endpoint come from the standard AWS environment (AWS_ENDPOINT_URL for an emulator).
  *   TOOLKIT_LIB: path to a built @aws-cdk/toolkit-lib with the evaluate action (default: .toolkit-lib, see scripts/build-toolkit-lib.sh)
- *   --emulator: Cloud Control reads the emulator hasn't implemented are listed as unresolved instead of failing the stack
  */
 const fs = require('fs');
 const path = require('path');
 
-const args = process.argv.slice(2);
-const emulator = args.includes('--emulator');
-const [asmDir, out, stackName] = args.filter((a) => a !== '--emulator');
+const [asmDir, out, stackName] = process.argv.slice(2);
 if (!asmDir || !out) {
-  console.error('usage: node scripts/evaluate.js <cloud-assembly-dir> <out.json> [stackName] [--emulator]');
+  console.error('usage: node scripts/evaluate.js <cloud-assembly-dir> <out.json> [stackName]');
   process.exit(2);
 }
 process.env.TOOLKIT_LIB ??= path.join(__dirname, '..', '.toolkit-lib', 'packages', '@aws-cdk', 'toolkit-lib');
-if (emulator) require('./emulator-not-implemented');
 const { Toolkit, StackSelectionStrategy, NonInteractiveIoHost } = require(process.env.TOOLKIT_LIB);
 
 async function main() {
