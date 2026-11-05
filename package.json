@@ -1,0 +1,38 @@
+{
+  "name": "cdk-integ-assertions",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Check that a deployed CDK integ test's resources have the properties its resolved template says, by reading them back through each service's API",
+  "license": "Apache-2.0",
+  "scripts": {
+    "check": "TS_NODE_TRANSPILE_ONLY=1 ts-node lib/check.ts",
+    "evaluate": "node scripts/evaluate.js",
+    "typecheck": "scripts/typecheck.sh"
+  },
+  "dependencies": {
+    "@aws-sdk/client-api-gateway": "^3",
+    "@aws-sdk/client-application-auto-scaling": "^3",
+    "@aws-sdk/client-cloudfront": "^3",
+    "@aws-sdk/client-cloudwatch": "^3",
+    "@aws-sdk/client-cloudwatch-logs": "^3",
+    "@aws-sdk/client-dynamodb": "^3",
+    "@aws-sdk/client-ec2": "^3",
+    "@aws-sdk/client-ecs": "^3",
+    "@aws-sdk/client-eventbridge": "^3",
+    "@aws-sdk/client-iam": "^3",
+    "@aws-sdk/client-kms": "^3",
+    "@aws-sdk/client-lambda": "^3",
+    "@aws-sdk/client-s3": "^3",
+    "@aws-sdk/client-sfn": "^3",
+    "@aws-sdk/client-sns": "^3",
+    "@aws-sdk/client-sqs": "^3",
+    "@aws-sdk/client-sts": "^3",
+    "@aws-sdk/client-wafv2": "^3",
+    "@smithy/types": "^4"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "ts-node": "^10",
+    "typescript": "^5"
+  }
+}
